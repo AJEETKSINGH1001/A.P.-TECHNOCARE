@@ -1,0 +1,232 @@
+<footer class="border-t border-brand-200 bg-brand-950 text-white">
+
+    <div class="container-page py-14">
+
+        <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+
+            <!-- Company -->
+            <div>
+                <div class="mb-4 flex items-center gap-3">
+
+                    {% if company_profile and company_profile.logo %}
+                        <img
+                            src="{{ company_profile.logo.url }}"
+                            alt="{{ company_profile.display_name }}"
+                            class="h-10 w-10 rounded-lg object-contain"
+                        >
+                    {% else %}
+                        <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-white text-xs font-black text-brand-900">
+                            {% if company_profile %}
+                                {{ company_profile.display_name|slice:":2"|upper }}
+                            {% else %}
+                                YB
+                            {% endif %}
+                        </span>
+                    {% endif %}
+
+                    <div>
+                        <div class="font-bold">
+                            {% if company_profile %}
+                                {{ company_profile.display_name }}
+                            {% elif site_settings %}
+                                {{ site_settings.site_name }}
+                            {% else %}
+                                Your Business
+                            {% endif %}
+                        </div>
+
+                        {% if company_profile and company_profile.tagline %}
+                            <div class="text-xs text-brand-300">
+                                {{ company_profile.tagline }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                {% if company_profile and company_profile.short_description %}
+                    <p class="max-w-sm text-sm leading-6 text-brand-300">
+                        {{ company_profile.short_description }}
+                    </p>
+                {% elif site_settings and site_settings.footer_text %}
+                    <p class="max-w-sm text-sm leading-6 text-brand-300">
+                        {{ site_settings.footer_text }}
+                    </p>
+                {% else %}
+                    <p class="max-w-sm text-sm leading-6 text-brand-300">
+                        Professional products and business solutions for industrial customers.
+                    </p>
+                {% endif %}
+            </div>
+
+
+            <!-- Products -->
+            <div>
+                <h2 class="mb-4 text-sm font-bold uppercase tracking-wider text-white">
+                    Products
+                </h2>
+
+                <div class="space-y-2.5">
+
+                    {% for category in navigation_categories|slice:":6" %}
+                        <a
+                            href="{% url 'products' %}?category={{ category.slug }}"
+                            class="block text-sm text-brand-300 transition hover:text-white"
+                        >
+                            {{ category.name }}
+                        </a>
+                    {% empty %}
+                        <a
+                            href="{% url 'products' %}"
+                            class="block text-sm text-brand-300 hover:text-white"
+                        >
+                            Product Catalogue
+                        </a>
+                    {% endfor %}
+
+                </div>
+            </div>
+
+
+            <!-- Company -->
+            <div>
+                <h2 class="mb-4 text-sm font-bold uppercase tracking-wider text-white">
+                    Company
+                </h2>
+
+                <div class="space-y-2.5">
+
+                    <a
+                        href="{% url 'about' %}"
+                        class="block text-sm text-brand-300 hover:text-white"
+                    >
+                        About Us
+                    </a>
+
+                    <a
+                        href="{% url 'contact' %}"
+                        class="block text-sm text-brand-300 hover:text-white"
+                    >
+                        Contact Us
+                    </a>
+
+                    <a
+                        href="{% url 'products' %}"
+                        class="block text-sm text-brand-300 hover:text-white"
+                    >
+                        Product Catalogue
+                    </a>
+
+                    <a
+                        href="/privacy/"
+                        class="block text-sm text-brand-300 hover:text-white"
+                    >
+                        Privacy Policy
+                    </a>
+
+                    <a
+                        href="/terms/"
+                        class="block text-sm text-brand-300 hover:text-white"
+                    >
+                        Terms & Conditions
+                    </a>
+
+                </div>
+            </div>
+
+
+            <!-- Contact -->
+            <div>
+                <h2 class="mb-4 text-sm font-bold uppercase tracking-wider text-white">
+                    Contact
+                </h2>
+
+                <div class="space-y-4 text-sm text-brand-300">
+
+                    {% if site_settings and site_settings.email %}
+                        <div>
+                            <div class="mb-1 text-xs font-semibold uppercase text-brand-400">
+                                Email
+                            </div>
+
+                            <a
+                                href="mailto:{{ site_settings.email }}"
+                                class="text-brand-200 hover:text-white"
+                            >
+                                {{ site_settings.email }}
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    {% if site_settings and site_settings.primary_phone %}
+                        <div>
+                            <div class="mb-1 text-xs font-semibold uppercase text-brand-400">
+                                Phone
+                            </div>
+
+                            <a
+                                href="tel:{{ site_settings.primary_phone }}"
+                                class="text-brand-200 hover:text-white"
+                            >
+                                {{ site_settings.primary_phone }}
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    {% if site_settings %}
+                        <div>
+                            <div class="mb-1 text-xs font-semibold uppercase text-brand-400">
+                                Address
+                            </div>
+
+                            <address class="not-italic leading-6">
+                                {% if site_settings.address_line_1 %}
+                                    {{ site_settings.address_line_1 }}<br>
+                                {% endif %}
+
+                                {% if site_settings.address_line_2 %}
+                                    {{ site_settings.address_line_2 }}<br>
+                                {% endif %}
+
+                                {% if site_settings.city %}
+                                    {{ site_settings.city }},
+                                {% endif %}
+
+                                {% if site_settings.state %}
+                                    {{ site_settings.state }}
+                                {% endif %}
+
+                                {% if site_settings.postal_code %}
+                                    - {{ site_settings.postal_code }}
+                                {% endif %}
+                            </address>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="mt-12 flex flex-col gap-3 border-t border-brand-800 pt-6 text-xs text-brand-400 sm:flex-row sm:items-center sm:justify-between">
+
+            <div>
+                © <span data-current-year></span>
+                {% if site_settings %}
+                    {{ site_settings.site_name }}
+                {% else %}
+                    Your Business
+                {% endif %}
+                . All rights reserved.
+            </div>
+
+            <div>
+                Built with Django.
+            </div>
+
+        </div>
+
+    </div>
+
+</footer>

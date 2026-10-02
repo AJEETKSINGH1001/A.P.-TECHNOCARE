@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title }} | {{ site_settings.site_name|default:"A.P. TECHNOCARE" }}
+{% endblock %}
+
+{% block content %}
+
+<section class="section">
+    <div class="container-page">
+
+        <div class="mx-auto max-w-2xl text-center">
+
+            <span class="eyebrow">
+                Coming Next
+            </span>
+
+            <h1 class="mt-5 text-4xl font-black tracking-tight text-brand-900 sm:text-5xl">
+                {{ page_title }}
+            </h1>
+
+            <p class="mt-5 text-lg leading-8 text-brand-600">
+                {{ page_description }}
+            </p>
+
+            <div class="mt-8 flex flex-wrap justify-center gap-3">
+
+                <a
+                    href="{% url 'home' %}"
+                    class="btn-secondary"
+                >
+                    Back to Home
+                </a>
+
+                <a
+                    href="{% url 'contact' %}"
+                    class="btn-primary"
+                >
+                    Get in Touch
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

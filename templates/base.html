@@ -3,6 +3,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+
     <meta charset="utf-8">
 
     <meta
@@ -10,41 +11,58 @@
         content="width=device-width, initial-scale=1"
     >
 
+    <meta
+        name="theme-color"
+        content="#0f172a"
+    >
+
     <title>
         {% block title %}
-            {{ site_name|default:"A.P. TECHNOCARE" }}
+            {% if site_settings %}
+                {{ site_settings.site_name }}
+            {% else %}
+                Your Business
+            {% endif %}
         {% endblock %}
     </title>
 
     <meta
         name="description"
-        content="{% block meta_description %}Professional industrial products and solutions.{% endblock %}"
+        content="{% block meta_description %}Professional industrial products and business solutions.{% endblock %}"
     >
 
     <link
         rel="stylesheet"
-        href="{% static 'css/site.css' %}"
+        href="{% static 'css/app.css' %}"
     >
 
-    {% block extra_head %}{% endblock %}
+    <script
+        src="{% static 'js/app.js' %}"
+        defer
+    ></script>
+
+    {% block extra_head %}
+    {% endblock %}
+
 </head>
 
-<body>
+<body class="min-h-screen bg-white">
 
-<header>
-    {% block header %}
-    {% endblock %}
-</header>
+<a
+    href="#main-content"
+    class="skip-link"
+>
+    Skip to content
+</a>
+
+{% include "partials/header.html" %}
 
 <main id="main-content">
     {% block content %}
     {% endblock %}
 </main>
 
-<footer>
-    {% block footer %}
-    {% endblock %}
-</footer>
+{% include "partials/footer.html" %}
 
 {% block extra_js %}
 {% endblock %}
