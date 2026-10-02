@@ -1,5 +1,6 @@
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models import Q
 
 
 class Category(models.Model):
@@ -327,10 +328,19 @@ class ProductImage(models.Model):
 
     class Meta:
         ordering = ["sort_order", "id"]
+
         indexes = [
             models.Index(
                 fields=["product", "is_primary", "sort_order"],
                 name="prd_img_primary_idx",
+            ),
+        ]
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=["product"],
+                condition=Q(is_primary=True),
+                name="one_primary_image_per_product",
             ),
         ]
 

@@ -3,8 +3,27 @@ from django.contrib import admin
 from .models import CompanyProfile, SiteSettings
 
 
+admin.site.site_header = "Business Website Administration"
+admin.site.site_title = "Business Website Admin"
+admin.site.index_title = "Website Management"
+
+
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "site_name",
+        "email",
+        "primary_phone",
+        "is_active",
+        "updated_at",
+    )
+
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
+
     fieldsets = (
         (
             "Basic Information",
@@ -13,7 +32,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
                     "site_name",
                     "site_tagline",
                     "footer_text",
-                )
+                ),
             },
         ),
         (
@@ -24,7 +43,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
                     "secondary_phone",
                     "email",
                     "whatsapp_number",
-                )
+                ),
             },
         ),
         (
@@ -39,18 +58,18 @@ class SiteSettingsAdmin(admin.ModelAdmin):
                     "country",
                     "google_maps_url",
                     "business_hours",
-                )
+                ),
             },
         ),
         (
-            "Social",
+            "Social Media",
             {
                 "fields": (
                     "facebook_url",
                     "instagram_url",
                     "linkedin_url",
                     "youtube_url",
-                )
+                ),
             },
         ),
         (
@@ -58,14 +77,54 @@ class SiteSettingsAdmin(admin.ModelAdmin):
             {
                 "fields": (
                     "is_active",
-                )
+                ),
+            },
+        ),
+        (
+            "System Information",
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                ),
+                "classes": (
+                    "collapse",
+                ),
             },
         ),
     )
 
+    def has_add_permission(self, request):
+        return not SiteSettings.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
 @admin.register(CompanyProfile)
 class CompanyProfileAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "display_name",
+        "business_type",
+        "year_established",
+        "is_published",
+        "updated_at",
+    )
+
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
+
+    search_fields = (
+        "display_name",
+        "legal_name",
+        "business_type",
+        "gstin",
+        "iec",
+    )
+
     fieldsets = (
         (
             "Company Identity",
@@ -75,7 +134,7 @@ class CompanyProfileAdmin(admin.ModelAdmin):
                     "legal_name",
                     "logo",
                     "tagline",
-                )
+                ),
             },
         ),
         (
@@ -84,7 +143,7 @@ class CompanyProfileAdmin(admin.ModelAdmin):
                 "fields": (
                     "short_description",
                     "about",
-                )
+                ),
             },
         ),
         (
@@ -100,7 +159,7 @@ class CompanyProfileAdmin(admin.ModelAdmin):
                     "annual_turnover",
                     "service_area",
                     "export_markets",
-                )
+                ),
             },
         ),
         (
@@ -108,7 +167,25 @@ class CompanyProfileAdmin(admin.ModelAdmin):
             {
                 "fields": (
                     "is_published",
-                )
+                ),
+            },
+        ),
+        (
+            "System Information",
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                ),
+                "classes": (
+                    "collapse",
+                ),
             },
         ),
     )
+
+    def has_add_permission(self, request):
+        return not CompanyProfile.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False

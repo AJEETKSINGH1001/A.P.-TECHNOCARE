@@ -5,11 +5,24 @@ from .models import ContactMessage, Enquiry, EnquiryItem
 
 class EnquiryItemInline(admin.TabularInline):
     model = EnquiryItem
+
     extra = 0
+
+    autocomplete_fields = (
+        "product",
+    )
+
+    fields = (
+        "product",
+        "quantity",
+        "unit",
+        "customer_note",
+    )
 
 
 @admin.register(Enquiry)
 class EnquiryAdmin(admin.ModelAdmin):
+
     list_display = (
         "name",
         "company_name",
@@ -24,6 +37,7 @@ class EnquiryAdmin(admin.ModelAdmin):
     list_filter = (
         "status",
         "source",
+        "assigned_to",
         "created_at",
     )
 
@@ -33,6 +47,10 @@ class EnquiryAdmin(admin.ModelAdmin):
         "phone",
         "email",
         "message",
+    )
+
+    autocomplete_fields = (
+        "assigned_to",
     )
 
     readonly_fields = (
@@ -47,12 +65,75 @@ class EnquiryAdmin(admin.ModelAdmin):
         EnquiryItemInline,
     ]
 
+    date_hierarchy = "created_at"
+
+    list_per_page = 50
+
+    save_on_top = True
+
+    fieldsets = (
+        (
+            "Customer",
+            {
+                "fields": (
+                    "name",
+                    "company_name",
+                    "phone",
+                    "email",
+                ),
+            },
+        ),
+        (
+            "Enquiry",
+            {
+                "fields": (
+                    "message",
+                    "source",
+                    "status",
+                    "assigned_to",
+                    "notes",
+                ),
+            },
+        ),
+        (
+            "Marketing Attribution",
+            {
+                "fields": (
+                    "utm_source",
+                    "utm_medium",
+                    "utm_campaign",
+                    "referrer",
+                ),
+                "classes": (
+                    "collapse",
+                ),
+            },
+        ),
+        (
+            "Technical",
+            {
+                "fields": (
+                    "ip_address",
+                    "user_agent",
+                    "created_at",
+                    "updated_at",
+                ),
+                "classes": (
+                    "collapse",
+                ),
+            },
+        ),
+    )
+
 
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
+
     list_display = (
         "name",
+        "company_name",
         "email",
+        "phone",
         "subject",
         "is_read",
         "created_at",
@@ -65,11 +146,21 @@ class ContactMessageAdmin(admin.ModelAdmin):
 
     search_fields = (
         "name",
+        "company_name",
         "email",
+        "phone",
         "subject",
         "message",
+    )
+
+    list_editable = (
+        "is_read",
     )
 
     readonly_fields = (
         "created_at",
     )
+
+    date_hierarchy = "created_at"
+
+    list_per_page = 50
