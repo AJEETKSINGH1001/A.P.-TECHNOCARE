@@ -1,10 +1,29 @@
+
 from django.shortcuts import render
+
+from apps.content.models import Testimonial
+from apps.catalog.models import Category
 
 
 def home(request):
+    navigation_categories = Category.objects.filter(
+        is_active=True,
+        parent__isnull=True,
+    ).order_by("sort_order", "name")[:8]
+
+    testimonials = Testimonial.objects.filter(
+        is_published=True,
+    ).order_by("sort_order", "-created_at")
+
+    context = {
+        "navigation_categories": navigation_categories,
+        "testimonials": testimonials,
+    }
+
     return render(
         request,
         "core/home.html",
+        context,
     )
 
 
@@ -21,16 +40,19 @@ def products_placeholder(request):
     )
 
 
+from .models import CompanyProfile
+
+
 def about_placeholder(request):
+    company_profile = CompanyProfile.objects.filter(
+        is_published=True
+    ).first()
+
     return render(
         request,
-        "core/placeholder.html",
+        "core/about.html",
         {
-            "page_title": "About Us",
-            "page_description": (
-                "Company information will be connected to "
-                "the content system in the next phase."
-            ),
+            "company_profile": company_profile,
         },
     )
 
@@ -47,7 +69,17 @@ def contact_placeholder(request):
             ),
         },
     )
+def privacy_policy(request):
+    return render(
+        request,
+        "core/privacy_policy.html",
+    )
 
+def terms_conditions(request):
+    return render(
+        request,
+        "core/terms_conditions.html",
+    )
 
 def search_placeholder(request):
     query = request.GET.get("q", "").strip()

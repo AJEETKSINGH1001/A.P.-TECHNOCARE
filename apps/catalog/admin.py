@@ -1,7 +1,19 @@
-from django.contrib import admin
+import logging
+import os
+import tempfile
+from io import StringIO
+
+from django.contrib import admin, messages
+from django.core.exceptions import PermissionDenied
+from django.core.management import call_command
+from django.core.management.base import CommandError
 from django.db.models import Count
 from django.forms.models import BaseInlineFormSet
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import path, reverse
 from django.utils.html import format_html
+
 
 from .models import (
     Application,
@@ -13,6 +25,9 @@ from .models import (
     ProductSpecification,
     ProductSpecificationDefinition,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 # =============================================================================
@@ -275,6 +290,8 @@ class ProductDocumentInline(admin.TabularInline):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
 
+    change_list_template = "admin/catalog/product/change_list.html"
+
     list_display = (
         "name",
         "category",
@@ -423,6 +440,87 @@ class ProductAdmin(admin.ModelAdmin):
             },
         ),
     )
+
+    def get_urls(self):
+        custom_urls = [
+            path(
+                "import-csv/",
+                self.admin_site.admin_view(self.import_csv_view),
+                name="catalog_product_import_csv",
+            ),
+        ]
+        return custom_urls + super().get_urls()
+
+    def import_csv_view(self, request):
+        if not (
+            self.has_add_permission(request)
+            or self.has_change_permission(request)
+        ):
+            raise PermissionDenied
+
+        if request.method == "POST":
+            uploaded_file = request.FILES.get("csv_file")
+
+            if not uploaded_file:
+                messages.error(request, "Please choose a CSV file.")
+            elif not uploaded_file.name.lower().endswith(".csv"):
+                messages.error(request, "Only .csv files are accepted.")
+            elif uploaded_file.size == 0:
+                messages.error(request, "The selected CSV file is empty.")
+            else:
+                temp_path = None
+                output = StringIO()
+
+                try:
+                    with tempfile.NamedTemporaryFile(
+                        mode="wb",
+                        suffix=".csv",
+                        delete=False,
+                    ) as temp_file:
+                        temp_path = temp_file.name
+                        for chunk in uploaded_file.chunks():
+                            temp_file.write(chunk)
+
+                    # Reuse the existing management command. Its positional
+                    # argument is the path to the uploaded CSV file.
+                    call_command(
+                        "import_products",
+                        temp_path,
+                        stdout=output,
+                    )
+
+                    result = output.getvalue().strip()
+                    messages.success(
+                        request,
+                        result or "Product CSV import completed successfully.",
+                    )
+                    return HttpResponseRedirect(
+                        reverse("admin:catalog_product_changelist")
+                    )
+
+                except CommandError as exc:
+                    messages.error(request, f"CSV import failed: {exc}")
+                except Exception:
+                    logger.exception("Unexpected error during product CSV import")
+                    messages.error(
+                        request,
+                        "The CSV import failed because of an unexpected error. "
+                        "Check the server log for details.",
+                    )
+                finally:
+                    if temp_path and os.path.exists(temp_path):
+                        os.remove(temp_path)
+
+        context = {
+            **self.admin_site.each_context(request),
+            "opts": self.model._meta,
+            "title": "Bulk Product CSV Upload",
+        }
+        return render(
+            request,
+            "admin/catalog/product/import_csv.html",
+            context,
+        )
 
     def get_queryset(self, request):
         return (

@@ -1,0 +1,401 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    Products |
+    {{ site_settings.site_name|default:"Your Business" }}
+{% endblock %}
+
+
+{% block meta_description %}
+    Browse our industrial product catalogue by category, brand, application and availability.
+{% endblock %}
+
+
+{% block content %}
+
+<section class="border-b border-brand-200 bg-brand-50">
+
+    <div class="container-page py-12 sm:py-16">
+
+        <div class="max-w-3xl">
+
+            <span class="eyebrow">
+                Product Catalogue
+            </span>
+
+            <h1 class="mt-5 text-4xl font-black tracking-tight text-brand-900 sm:text-5xl">
+                Explore our products
+            </h1>
+
+            <p class="mt-5 text-base leading-8 text-brand-600 sm:text-lg">
+                Search products, browse categories and review specifications before contacting our team for pricing.
+            </p>
+
+
+            <!-- Search -->
+
+            <form
+                method="get"
+                action="{% url 'products' %}"
+                class="mt-7"
+            >
+
+                <div class="flex flex-col gap-2 rounded-2xl border border-brand-200 bg-white p-2 sm:flex-row">
+
+                    <label
+                        for="catalog-search"
+                        class="sr-only"
+                    >
+                        Search products
+                    </label>
+
+                    <input
+                        id="catalog-search"
+                        name="q"
+                        type="search"
+                        value="{{ query }}"
+                        placeholder="Search by product, brand, SKU or specification..."
+                        class="min-w-0 flex-1 rounded-xl px-4 py-3 text-sm text-brand-900 outline-none placeholder:text-brand-400"
+                    >
+
+                    <button
+                        type="submit"
+                        class="btn-primary"
+                    >
+                        Search
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="section">
+
+    <div class="container-page">
+
+        <div class="grid gap-8 lg:grid-cols-[280px_1fr]">
+
+            <!-- Filters -->
+
+            <aside>
+
+                <div class="card sticky top-32 p-5">
+
+                    <div class="mb-5">
+
+                        <h2 class="text-lg font-bold text-brand-900">
+                            Filter Products
+                        </h2>
+
+                        <p class="mt-1 text-xs text-brand-500">
+                            Narrow the catalogue to what you need.
+                        </p>
+
+                    </div>
+
+                    {% include "catalog/product_filters.html" %}
+
+                </div>
+
+            </aside>
+
+
+            <!-- Results -->
+
+            <div>
+
+                <div class="mb-7 flex flex-col gap-3 border-b border-brand-200 pb-5 sm:flex-row sm:items-end sm:justify-between">
+
+                    <div>
+
+                        <p class="text-sm font-semibold text-brand-500">
+                            {% if page_obj.paginator.count %}
+                                {{ page_obj.paginator.count }}
+                                product{{ page_obj.paginator.count|pluralize }}
+                                found
+                            {% else %}
+                                No products found
+                            {% endif %}
+                        </p>
+
+                        {% if query %}
+                            <h2 class="mt-1 text-xl font-bold text-brand-900">
+                                Results for "{{ query }}"
+                            </h2>
+                        {% else %}
+                            <h2 class="mt-1 text-xl font-bold text-brand-900">
+                                All Products
+                            </h2>
+                        {% endif %}
+
+                    </div>
+
+{% if page_obj.paginator.count %}
+    <div class="text-sm text-brand-500">
+        Page {{ page_obj.number }}
+        of
+        {{ page_obj.paginator.num_pages }}
+    </div>
+{% endif %}
+
+                </div>
+
+
+                <!-- Product grid -->
+
+                {% if products %}
+
+                    <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+
+                        {% for product in products %}
+                            {% include "components/product_card.html" %}
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <div class="card p-10 text-center">
+
+                        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-50 text-brand-400">
+                            <svg
+                                width="25"
+                                height="25"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                aria-hidden="true"
+                            >
+                                <circle
+                                    cx="11"
+                                    cy="11"
+                                    r="6.5"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                />
+                                <path
+                                    d="m16 16 4 4"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                    stroke-linecap="round"
+                                />
+                            </svg>
+                        </div>
+
+                        <h2 class="mt-5 text-xl font-bold text-brand-900">
+                            No matching products
+                        </h2>
+
+                        <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-brand-500">
+                            Try another search term or clear the filters.
+                        </p>
+
+                        <a
+                            href="{% url 'products' %}"
+                            class="btn-secondary mt-6"
+                        >
+                            View All Products
+                        </a>
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Pagination -->
+
+                {% if page_obj.paginator.num_pages > 1 %}
+
+                    <nav
+                        class="mt-10 flex items-center justify-center gap-2"
+                        aria-label="Product pagination"
+                    >
+
+                        {% if page_obj.has_previous %}
+
+                            <a
+                                href="?{% if query %}q={{ query|urlencode }}&{% endif %}{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.brand %}brand={{ request.GET.brand }}&{% endif %}{% if request.GET.application %}application={{ request.GET.application }}&{% endif %}{% if request.GET.availability %}availability={{ request.GET.availability }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}page={{ page_obj.previous_page_number }}"
+                                class="btn-secondary px-4"
+                            >
+                                Previous
+                            </a>
+
+                        {% endif %}
+
+
+                        <span class="px-3 text-sm font-semibold text-brand-600">
+                            {{ page_obj.number }}
+                            /
+                            {{ page_obj.paginator.num_pages }}
+                        </span>
+
+
+                        {% if page_obj.has_next %}
+
+                            <a
+                                href="?{% if query %}q={{ query|urlencode }}&{% endif %}{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.brand %}brand={{ request.GET.brand }}&{% endif %}{% if request.GET.application %}application={{ request.GET.application }}&{% endif %}{% if request.GET.availability %}availability={{ request.GET.availability }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}page={{ page_obj.next_page_number }}"
+                                class="btn-primary px-4"
+                            >
+                                Next
+                            </a>
+
+                        {% endif %}
+
+                    </nav>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- GET QUOTE POPUP -->
+<div id="quoteModal" class="quote-modal" aria-hidden="true">
+
+    <div class="quote-modal-overlay" data-quote-close></div>
+
+    <div
+        class="quote-modal-container"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="quoteModalTitle"
+    >
+
+        <button
+            type="button"
+            class="quote-close"
+            data-quote-close
+            aria-label="Close popup"
+        >
+            &times;
+        </button>
+
+        <!-- LEFT SIDE: PRODUCT DETAILS -->
+        <div class="quote-product-panel">
+
+            <div class="quote-product-image-wrapper">
+                <img
+                    id="quoteProductImage"
+                    src=""
+                    alt="Selected product"
+                    class="quote-product-image"
+                    hidden
+                >
+
+                <div id="quoteImagePlaceholder" class="quote-image-placeholder">
+                    Product Image
+                </div>
+            </div>
+
+            <h3 id="quoteProductName" class="quote-product-name">
+                Product Name
+            </h3>
+
+            <p id="quoteProductCategory" class="quote-product-category"></p>
+
+            <div class="quote-product-info">
+
+                <p>
+                    <span>Product:</span>
+                    <strong id="quoteProductInfoName"></strong>
+                </p>
+
+                <p>
+                    <span>Price:</span>
+                    <strong id="quoteProductPrice"></strong>
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE: ENQUIRY FORM -->
+        <div class="quote-form-panel">
+
+            <h2 id="quoteModalTitle">
+                Get Best Quote
+            </h2>
+
+            <p class="quote-description">
+                Get the best price and product details from
+                A.P. Technocare on your mobile quickly.
+            </p>
+
+            <form
+                id="quoteForm"
+                action="{% url 'contact' %}"
+                method="POST"
+            >
+
+                {% csrf_token %}
+
+                <input
+                    type="hidden"
+                    name="product_id"
+                    id="quoteProductId"
+                >
+
+                <input
+                    type="hidden"
+                    name="product_name"
+                    id="quoteProductHiddenName"
+                >
+
+                <div class="quote-field">
+
+                    <label for="quoteMobile">
+                        Mobile Number
+                    </label>
+
+                    <div class="quote-mobile-input">
+
+                        <span class="quote-country-code">
+                            🇮🇳 +91
+                        </span>
+
+                        <input
+                            type="tel"
+                            id="quoteMobile"
+                            name="mobile"
+                            placeholder="Enter your mobile"
+                            maxlength="10"
+                            pattern="[6-9][0-9]{9}"
+                            inputmode="numeric"
+                            required
+                        >
+
+                    </div>
+
+                    <small>
+                        We will contact you on this number.
+                    </small>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="quote-submit-btn"
+                >
+                    Submit Now
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

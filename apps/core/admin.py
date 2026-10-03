@@ -6,6 +6,7 @@ from .models import CompanyProfile, SiteSettings
 admin.site.site_header = "Business Website Administration"
 admin.site.site_title = "Business Website Admin"
 admin.site.index_title = "Website Management"
+admin.site.index_template = "admin/index.html"
 
 
 @admin.register(SiteSettings)

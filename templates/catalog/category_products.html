@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    {{ category.name }} |
+    {{ site_settings.site_name|default:"Your Business" }}
+{% endblock %}
+
+
+{% block meta_description %}
+    Browse {{ category.name }} products and request pricing from our team.
+{% endblock %}
+
+
+{% block content %}
+
+<section class="border-b border-brand-200 bg-brand-50">
+
+    <div class="container-page py-12 sm:py-16">
+
+        <nav
+            class="mb-5 text-sm text-brand-500"
+            aria-label="Breadcrumb"
+        >
+            <a
+                href="{% url 'home' %}"
+                class="hover:text-brand-900"
+            >
+                Home
+            </a>
+
+            <span class="mx-2">/</span>
+
+            <a
+                href="{% url 'products' %}"
+                class="hover:text-brand-900"
+            >
+                Products
+            </a>
+
+            <span class="mx-2">/</span>
+
+            <span class="text-brand-700">
+                {{ category.name }}
+            </span>
+        </nav>
+
+
+        <span class="eyebrow">
+            Product Category
+        </span>
+
+        <h1 class="mt-5 text-4xl font-black tracking-tight text-brand-900 sm:text-5xl">
+            {{ category.name }}
+        </h1>
+
+        {% if category.description %}
+            <p class="mt-5 max-w-3xl text-base leading-8 text-brand-600 sm:text-lg">
+                {{ category.description }}
+            </p>
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+<section class="section">
+
+    <div class="container-page">
+
+        <div class="grid gap-8 lg:grid-cols-[280px_1fr]">
+
+            <aside>
+
+                <div class="card sticky top-32 p-5">
+
+                    <h2 class="mb-5 text-lg font-bold text-brand-900">
+                        Filter Products
+                    </h2>
+
+                    {% include "catalog/product_filters.html" %}
+
+                </div>
+
+            </aside>
+
+
+            <div>
+
+                <div class="mb-7 flex items-end justify-between border-b border-brand-200 pb-5">
+
+                    <div>
+                        <p class="text-sm font-semibold text-brand-500">
+                            {{ page_obj.paginator.count }}
+                            product{{ page_obj.paginator.count|pluralize }}
+                        </p>
+
+                        <h2 class="mt-1 text-xl font-bold text-brand-900">
+                            {{ category.name }}
+                        </h2>
+                    </div>
+
+                    <div class="text-sm text-brand-500">
+                        Page {{ page_obj.number }}
+                    </div>
+
+                </div>
+
+
+                {% if products %}
+
+                    <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+
+                        {% for product in products %}
+                            {% include "components/product_card.html" %}
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <div class="card p-10 text-center">
+
+                        <h2 class="text-xl font-bold text-brand-900">
+                            No products in this category yet
+                        </h2>
+
+                        <p class="mt-2 text-sm text-brand-500">
+                            Products will appear here when they are published in Django Admin.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,3 +1,4 @@
+
 <header class="sticky top-0 z-50 border-b border-brand-200 bg-white/95 backdrop-blur">
 
     <!-- Utility bar -->
@@ -125,7 +126,7 @@
                 >
                     {% for category in navigation_categories %}
                         <a
-                            href="{% url 'products' %}?category={{ category.slug }}"
+                            href="{% url 'category_products' category.slug %}"
                             class="block rounded-xl px-3 py-2.5 text-sm font-medium text-brand-700 hover:bg-brand-50 hover:text-brand-900"
                         >
                             {{ category.name }}
@@ -146,7 +147,7 @@
             </a>
 
             <a
-                href="{% url 'contact' %}"
+                href="{% url 'enquiries:contact_submit' %}"
                 class="rounded-lg px-3 py-2 text-sm font-semibold text-brand-700 hover:bg-brand-50 hover:text-brand-900"
             >
                 Contact
@@ -204,12 +205,12 @@
         </form>
 
 
-        <!-- Quote CTA -->
+        <!-- Contact CTA -->
         <a
-            href="{% url 'contact' %}"
+            href="{% url 'enquiries:contact_submit' %}"
             class="hidden shrink-0 rounded-xl bg-accent-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-accent-700 sm:inline-flex"
         >
-            Get Quote
+            Contact Us
         </a>
 
 
@@ -306,14 +307,14 @@
                 </a>
 
                 <a
-                    href="{% url 'contact' %}"
+                    href="{% url 'enquiries:contact_submit' %}"
                     class="block rounded-xl px-4 py-3 font-semibold text-brand-800 hover:bg-brand-50"
                 >
                     Contact
                 </a>
 
                 <a
-                    href="{% url 'contact' %}"
+                    href="{% url 'enquiries:contact_submit' %}"
                     class="mt-3 flex items-center justify-center rounded-xl bg-accent-600 px-4 py-3 font-bold text-white hover:bg-accent-700"
                 >
                     Request a Quote

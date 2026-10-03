@@ -1,3 +1,4 @@
+
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
@@ -41,7 +42,6 @@ class SiteSettings(TimeStampedModel):
     youtube_url = models.URLField(blank=True)
 
     footer_text = models.TextField(blank=True)
-
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -111,3 +111,41 @@ class CompanyProfile(TimeStampedModel):
 
     def __str__(self):
         return self.display_name
+
+
+class Testimonial(TimeStampedModel):
+    """
+    Customer testimonials displayed on the website.
+    """
+
+    customer_name = models.CharField(max_length=200)
+    company_name = models.CharField(max_length=255, blank=True)
+    designation = models.CharField(max_length=150, blank=True)
+
+    message = models.TextField()
+
+    rating = models.PositiveSmallIntegerField(
+        default=5,
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(5),
+        ],
+    )
+
+    image = models.ImageField(
+        upload_to="testimonials/",
+        blank=True,
+    )
+
+    is_featured = models.BooleanField(default=False)
+    is_published = models.BooleanField(default=True)
+
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order", "-created_at"]
+        verbose_name = "Testimonial"
+        verbose_name_plural = "Testimonials"
+
+    def __str__(self):
+        return self.customer_name

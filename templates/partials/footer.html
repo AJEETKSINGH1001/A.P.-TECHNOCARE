@@ -1,3 +1,4 @@
+
 <footer class="border-t border-brand-200 bg-brand-950 text-white">
 
     <div class="container-page py-14">
@@ -70,7 +71,7 @@
 
                     {% for category in navigation_categories|slice:":6" %}
                         <a
-                            href="{% url 'products' %}?category={{ category.slug }}"
+                            href="{% url 'category_products' category.slug %}"
                             class="block text-sm text-brand-300 transition hover:text-white"
                         >
                             {{ category.name }}
@@ -104,7 +105,7 @@
                     </a>
 
                     <a
-                        href="{% url 'contact' %}"
+                        href="{% url 'enquiries:contact_submit' %}"
                         class="block text-sm text-brand-300 hover:text-white"
                     >
                         Contact Us
@@ -118,17 +119,17 @@
                     </a>
 
                     <a
-                        href="/privacy/"
+                        href="{% url 'privacy_policy' %}"
                         class="block text-sm text-brand-300 hover:text-white"
                     >
                         Privacy Policy
                     </a>
 
                     <a
-                        href="/terms/"
+                        href="{% url 'terms' %}"
                         class="block text-sm text-brand-300 hover:text-white"
                     >
-                        Terms & Conditions
+                        Terms &amp; Conditions
                     </a>
 
                 </div>
@@ -151,7 +152,7 @@
 
                             <a
                                 href="mailto:{{ site_settings.email }}"
-                                class="text-brand-200 hover:text-white"
+                                class="text-brand-200 transition hover:text-white"
                             >
                                 {{ site_settings.email }}
                             </a>
@@ -166,49 +167,79 @@
 
                             <a
                                 href="tel:{{ site_settings.primary_phone }}"
-                                class="text-brand-200 hover:text-white"
+                                class="text-brand-200 transition hover:text-white"
                             >
                                 {{ site_settings.primary_phone }}
                             </a>
                         </div>
                     {% endif %}
 
-                    {% if site_settings %}
-                        <div>
-                            <div class="mb-1 text-xs font-semibold uppercase text-brand-400">
-                                Address
-                            </div>
+                    <!-- Google Maps Address -->
+                    <div>
+                        <div class="mb-1 text-xs font-semibold uppercase text-brand-400">
+                            Address
+                        </div>
 
-                            <address class="not-italic leading-6">
-                                {% if site_settings.address_line_1 %}
-                                    {{ site_settings.address_line_1 }}<br>
-                                {% endif %}
+                        <a
+                            href="https://maps.app.goo.gl/LTeCGCLDXN7N5MkQ8?g_st=awb"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="group block leading-6 text-brand-200 transition hover:text-white"
+                            aria-label="View our business location on Google Maps"
+                        >
+                            <address class="not-italic">
+                                {% if site_settings %}
+                                    {% if site_settings.address_line_1 %}
+                                        {{ site_settings.address_line_1 }}<br>
+                                    {% endif %}
 
-                                {% if site_settings.address_line_2 %}
-                                    {{ site_settings.address_line_2 }}<br>
-                                {% endif %}
+                                    {% if site_settings.address_line_2 %}
+                                        {{ site_settings.address_line_2 }}<br>
+                                    {% endif %}
 
-                                {% if site_settings.city %}
-                                    {{ site_settings.city }},
-                                {% endif %}
+                                    {% if site_settings.city %}
+                                        {{ site_settings.city }},
+                                    {% endif %}
 
-                                {% if site_settings.state %}
-                                    {{ site_settings.state }}
-                                {% endif %}
+                                    {% if site_settings.state %}
+                                        {{ site_settings.state }}
+                                    {% endif %}
 
-                                {% if site_settings.postal_code %}
-                                    - {{ site_settings.postal_code }}
+                                    {% if site_settings.postal_code %}
+                                        - {{ site_settings.postal_code }}
+                                    {% endif %}
                                 {% endif %}
                             </address>
-                        </div>
-                    {% endif %}
 
+                            <span class="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-accent-400 transition group-hover:text-white">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Get Directions
+                                <i class="fas fa-external-link-alt text-[10px]"></i>
+                            </span>
+                        </a>
+                    </div>
+
+<!-- Embedded Google Maps Frame -->
+<div class="overflow-hidden rounded-xl border border-brand-700">
+
+<iframe
+    src="https://www.google.com/maps?output=embed&q=A.P.%20Technocare&ll=30.8882555,75.8598456&z=18"
+    width="100%"
+    height="200"
+    style="border: 0;"
+    allowfullscreen
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    title="A.P. TECHNOCARE Location on Google Maps">
+</iframe>
+</div>
                 </div>
             </div>
 
         </div>
 
 
+        <!-- Copyright -->
         <div class="mt-12 flex flex-col gap-3 border-t border-brand-800 pt-6 text-xs text-brand-400 sm:flex-row sm:items-center sm:justify-between">
 
             <div>

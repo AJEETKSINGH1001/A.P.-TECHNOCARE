@@ -1,0 +1,67 @@
+
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+
+<div id="content-main">
+
+    <div class="module">
+
+        <h2>Bulk Product CSV Upload</h2>
+
+        <p>
+            Select a CSV file to import products using the existing
+            <strong>import_products</strong> management command.
+        </p>
+
+        <form
+            method="post"
+            enctype="multipart/form-data"
+        >
+
+            {% csrf_token %}
+
+            <fieldset class="module aligned">
+
+                <div class="form-row">
+
+                    <label for="id_csv_file">
+                        CSV File:
+                    </label>
+
+                    <input
+                        type="file"
+                        name="csv_file"
+                        id="id_csv_file"
+                        accept=".csv,text/csv"
+                        required
+                    >
+
+                </div>
+
+            </fieldset>
+
+            <div class="submit-row">
+
+                <input
+                    type="submit"
+                    value="Upload and Import Products"
+                    class="default"
+                >
+
+                <a
+                    href="{% url 'admin:catalog_product_changelist' %}"
+                    class="button"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

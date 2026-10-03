@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class EnquiriesConfig(AppConfig):
-    name = 'apps.enquiries'
+    name = "apps.enquiries"
+    label = "enquiries"

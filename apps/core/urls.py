@@ -4,12 +4,10 @@ from . import views
 
 
 urlpatterns = [
-    path("", views.home, name="home"),
-
     path(
-        "products/",
-        views.products_placeholder,
-        name="products",
+        "",
+        views.home,
+        name="home",
     ),
 
     path(
@@ -25,8 +23,20 @@ urlpatterns = [
     ),
 
     path(
-        "search/",
-        views.search_placeholder,
-        name="search",
+        "privacy-policy/",
+        views.privacy_policy,
+        name="privacy_policy",
     ),
+
+    path(
+         "terms/",
+         views.terms_conditions,
+         name="terms",
+),
+    path(
+         "about/",
+         views.about_placeholder,
+         name="about",
+),
+
 ]

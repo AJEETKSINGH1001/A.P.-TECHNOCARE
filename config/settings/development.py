@@ -1,9 +1,4 @@
 from .base import *
 
-
+# Enable Django's development static-file serving
 DEBUG = True
-
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
-]

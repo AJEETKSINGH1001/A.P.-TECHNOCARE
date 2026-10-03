@@ -126,6 +126,29 @@ class EnquiryAdmin(admin.ModelAdmin):
     )
 
 
+from django.contrib import admin
+from .models import Quotation
+
+
+@admin.register(Quotation)
+class QuotationAdmin(admin.ModelAdmin):
+    list_display = (
+        "reference",
+        "enquiry",
+        "status",
+        "currency",
+        "grand_total",
+        "issue_date",
+        "valid_until",
+    )
+    list_filter = ("status", "currency", "issue_date")
+    search_fields = (
+        "reference",
+        "customer_name",
+        "customer_email",
+    )
+    ordering = ("-created_at",)
+
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
 

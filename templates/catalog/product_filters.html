@@ -1,0 +1,212 @@
+<form
+    method="get"
+    action="{{ request.path }}"
+    class="space-y-5"
+>
+
+    {% if query %}
+        <input
+            type="hidden"
+            name="q"
+            value="{{ query }}"
+        >
+    {% endif %}
+
+
+    <!-- Category -->
+
+    <div>
+
+        <label
+            for="filter-category"
+            class="mb-2 block text-sm font-bold text-brand-900"
+        >
+            Category
+        </label>
+
+        <select
+            id="filter-category"
+            name="category"
+            class="w-full rounded-xl border border-brand-200 bg-white px-3 py-2.5 text-sm text-brand-800 outline-none focus:border-accent-400"
+        >
+
+            <option value="">
+                All categories
+            </option>
+
+            {% for item in categories %}
+                <option
+                    value="{{ item.slug }}"
+                    {% if request.GET.category == item.slug %}
+                        selected
+                    {% endif %}
+                >
+                    {{ item.name }}
+                </option>
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+
+    <!-- Brand -->
+
+    <div>
+
+        <label
+            for="filter-brand"
+            class="mb-2 block text-sm font-bold text-brand-900"
+        >
+            Brand
+        </label>
+
+        <select
+            id="filter-brand"
+            name="brand"
+            class="w-full rounded-xl border border-brand-200 bg-white px-3 py-2.5 text-sm text-brand-800 outline-none focus:border-accent-400"
+        >
+
+            <option value="">
+                All brands
+            </option>
+
+            {% for item in brands %}
+                <option
+                    value="{{ item.slug }}"
+                    {% if request.GET.brand == item.slug %}
+                        selected
+                    {% endif %}
+                >
+                    {{ item.name }}
+                </option>
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+
+    <!-- Application -->
+
+    <div>
+
+        <label
+            for="filter-application"
+            class="mb-2 block text-sm font-bold text-brand-900"
+        >
+            Application
+        </label>
+
+        <select
+            id="filter-application"
+            name="application"
+            class="w-full rounded-xl border border-brand-200 bg-white px-3 py-2.5 text-sm text-brand-800 outline-none focus:border-accent-400"
+        >
+
+            <option value="">
+                All applications
+            </option>
+
+            {% for item in applications %}
+                <option
+                    value="{{ item.slug }}"
+                    {% if request.GET.application == item.slug %}
+                        selected
+                    {% endif %}
+                >
+                    {{ item.name }}
+                </option>
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+
+    <!-- Availability -->
+
+    <div>
+
+        <label
+            for="filter-availability"
+            class="mb-2 block text-sm font-bold text-brand-900"
+        >
+            Availability
+        </label>
+
+        <select
+            id="filter-availability"
+            name="availability"
+            class="w-full rounded-xl border border-brand-200 bg-white px-3 py-2.5 text-sm text-brand-800 outline-none focus:border-accent-400"
+        >
+
+            <option value="">
+                All availability
+            </option>
+
+            {% for value, label in availability_choices %}
+                <option
+                    value="{{ value }}"
+                    {% if request.GET.availability == value %}
+                        selected
+                    {% endif %}
+                >
+                    {{ label }}
+                </option>
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+
+    <!-- Sort -->
+
+    <div>
+
+        <label
+            for="filter-sort"
+            class="mb-2 block text-sm font-bold text-brand-900"
+        >
+            Sort By
+        </label>
+
+        <select
+            id="filter-sort"
+            name="sort"
+            class="w-full rounded-xl border border-brand-200 bg-white px-3 py-2.5 text-sm text-brand-800 outline-none focus:border-accent-400"
+        >
+
+            {% for value, label in sort_options %}
+                <option
+                    value="{{ value }}"
+                    {% if request.GET.sort == value %}
+                        selected
+                    {% endif %}
+                >
+                    {{ label }}
+                </option>
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+
+    <button
+        type="submit"
+        class="btn-primary w-full"
+    >
+        Apply Filters
+    </button>
+
+
+    <a
+        href="{{ request.path }}"
+        class="btn-secondary w-full"
+    >
+        Clear Filters
+    </a>
+
+</form>

@@ -44,6 +44,7 @@ class Category(models.Model):
                 fields=["parent", "is_active"],
                 name="cat_parent_active_idx",
             ),
+
         ]
 
     def __str__(self):

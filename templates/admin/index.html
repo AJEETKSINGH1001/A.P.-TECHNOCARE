@@ -1,0 +1,382 @@
+
+{% extends "admin/base_site.html" %}
+
+{% load i18n %}
+
+{% block title %}A.P. TECHNOCARE Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Welcome Header -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2>A.P. TECHNOCARE Dashboard</h2>
+            <p class="text-muted mb-0">
+                Welcome to your business management dashboard.
+                Monitor products, enquiries and quotations.
+            </p>
+        </div>
+    </div>
+
+    <!-- Main Statistics -->
+    <div class="row">
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card card-primary card-outline h-100">
+                <div class="card-body">
+                    <div class="text-muted">Total Products</div>
+                    <h2>{{ dashboard_products }}</h2>
+                    <small>{{ dashboard_active_products }} active products</small>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'admin:catalog_product_changelist' %}">
+                        Manage Products <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card card-success card-outline h-100">
+                <div class="card-body">
+                    <div class="text-muted">Categories</div>
+                    <h2>{{ dashboard_categories }}</h2>
+                    <small>{{ dashboard_active_categories }} active categories</small>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'admin:catalog_category_changelist' %}">
+                        Manage Categories <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card card-info card-outline h-100">
+                <div class="card-body">
+                    <div class="text-muted">Total Enquiries</div>
+                    <h2>{{ dashboard_enquiries }}</h2>
+                    <small>{{ dashboard_new_enquiries }} new enquiries</small>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'admin:enquiries_enquiry_changelist' %}">
+                        View Enquiries <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card card-warning card-outline h-100">
+                <div class="card-body">
+                    <div class="text-muted">Quotations</div>
+                    <h2>{{ dashboard_quotations }}</h2>
+                    <small>{{ dashboard_accepted_quotations }} accepted</small>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'admin:enquiries_quotation_changelist' %}">
+                        Manage Quotations <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Business Overview -->
+    <div class="row">
+
+        <div class="col-lg-8">
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-chart-line mr-2"></i>
+                        Business Overview
+                    </h3>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3 border rounded">
+                                <small class="text-muted">New Enquiries</small>
+                                <h3>{{ dashboard_new_enquiries }}</h3>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3 border rounded">
+                                <small class="text-muted">Qualified</small>
+                                <h3>{{ dashboard_qualified_enquiries }}</h3>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3 border rounded">
+                                <small class="text-muted">Won Enquiries</small>
+                                <h3>{{ dashboard_won_enquiries }}</h3>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3 border rounded">
+                                <small class="text-muted">Unread Messages</small>
+                                <h3>{{ dashboard_unread_messages }}</h3>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3 border rounded">
+                                <small class="text-muted">Featured Products</small>
+                                <h3>{{ dashboard_featured_products }}</h3>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3 border rounded">
+                                <small class="text-muted">Out of Stock</small>
+                                <h3>{{ dashboard_out_of_stock }}</h3>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Enquiries -->
+            <div class="card mb-4">
+
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-envelope mr-2"></i>
+                        Recent Enquiries
+                    </h3>
+
+                    <div class="card-tools">
+                        <a href="{% url 'admin:enquiries_enquiry_changelist' %}"
+                           class="btn btn-sm btn-primary">
+                            View All
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body p-0">
+
+                    {% if dashboard_recent_enquiries %}
+
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Company</th>
+                                    <th>Source</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for enquiry in dashboard_recent_enquiries %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'admin:enquiries_enquiry_change' enquiry.pk %}">
+                                            {{ enquiry.name }}
+                                        </a>
+                                    </td>
+
+                                    <td>
+                                        {{ enquiry.company_name|default:"—" }}
+                                    </td>
+
+                                    <td>
+                                        {{ enquiry.get_source_display }}
+                                    </td>
+
+                                    <td>
+                                        <span class="badge badge-info">
+                                            {{ enquiry.get_status_display }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        {{ enquiry.created_at|date:"d M Y, H:i" }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                    {% else %}
+
+                    <div class="p-4 text-center text-muted">
+                        <i class="fas fa-inbox fa-2x mb-2"></i>
+                        <p class="mb-0">No enquiries received yet.</p>
+                    </div>
+
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="col-lg-4">
+
+            <!-- Today's Activity -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-calendar-day mr-2"></i>
+                        Today's Activity
+                    </h3>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>New Enquiries</span>
+                        <strong>{{ dashboard_today_enquiries }}</strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <span>Contact Messages</span>
+                        <strong>{{ dashboard_today_messages }}</strong>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Quotations -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-file-invoice mr-2"></i>
+                        Quotation Overview
+                    </h3>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Draft</span>
+                        <strong>{{ dashboard_draft_quotations }}</strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Sent</span>
+                        <strong>{{ dashboard_sent_quotations }}</strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Accepted</span>
+                        <strong>{{ dashboard_accepted_quotations }}</strong>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between">
+                        <strong>Accepted Value</strong>
+                        <strong>₹{{ dashboard_quotation_value|floatformat:2 }}</strong>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Catalog Summary -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-boxes mr-2"></i>
+                        Catalog Summary
+                    </h3>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Total Brands</span>
+                        <strong>{{ dashboard_brands }}</strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Applications</span>
+                        <strong>{{ dashboard_applications }}</strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <span>Featured Products</span>
+                        <strong>{{ dashboard_featured_products }}</strong>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-bolt mr-2"></i>
+                        Quick Actions
+                    </h3>
+                </div>
+
+                <div class="card-body">
+
+                    <a href="{% url 'admin:catalog_product_add' %}"
+                       class="btn btn-primary btn-block mb-2">
+                        <i class="fas fa-plus mr-1"></i>
+                        Add Product
+                    </a>
+
+                    <a href="{% url 'admin:catalog_category_add' %}"
+                       class="btn btn-secondary btn-block mb-2">
+                        <i class="fas fa-plus mr-1"></i>
+                        Add Category
+                    </a>
+
+                    <a href="{% url 'admin:enquiries_enquiry_changelist' %}"
+                       class="btn btn-info btn-block mb-2">
+                        <i class="fas fa-envelope mr-1"></i>
+                        View Enquiries
+                    </a>
+
+                    <a href="{% url 'admin:enquiries_quotation_changelist' %}"
+                       class="btn btn-success btn-block">
+                        <i class="fas fa-file-invoice mr-1"></i>
+                        Manage Quotations
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Original Admin Applications -->
+    {% if app_list %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3 class="card-title">
+                Administration
+            </h3>
+        </div>
+
+        <div class="card-body">
+            {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
