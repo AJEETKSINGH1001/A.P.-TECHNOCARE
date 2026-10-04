@@ -3,45 +3,41 @@ from django.contrib.auth import get_user_model
 
 
 class Command(BaseCommand):
-    help = "Reset/list Django admin users"
+    help = "Create or reset production Django admin"
 
     def handle(self, *args, **options):
         User = get_user_model()
 
-        self.stdout.write("\n=== Django Users ===")
-
-        for user in User.objects.all():
-            self.stdout.write(
-                f"Username: {user.username} | "
-                f"Email: {user.email} | "
-                f"Active: {user.is_active} | "
-                f"Staff: {user.is_staff} | "
-                f"Superuser: {user.is_superuser}"
-            )
-
-        self.stdout.write("\n=== Resetting admin user ===")
-
         username = "admin"
-        password = "admin@123"
+        email = "admin@example.com"
+        password = "Admin@123456"
 
-        try:
-            user = User.objects.get(username=username)
+        user, created = User.objects.get_or_create(
+            username=username,
+            defaults={
+                "email": email,
+            },
+        )
 
-            user.set_password(password)
-            user.is_active = True
-            user.is_staff = True
-            user.is_superuser = True
-            user.save()
+        user.email = email
+        user.set_password(password)
+        user.is_active = True
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
 
+        if created:
             self.stdout.write(
                 self.style.SUCCESS(
-                    f"SUCCESS: Password reset for {username}"
+                    "SUCCESS: New admin user created."
+                )
+            )
+        else:
+            self.stdout.write(
+                self.style.SUCCESS(
+                    "SUCCESS: Existing admin password reset."
                 )
             )
 
-        except User.DoesNotExist:
-            self.stdout.write(
-                self.style.ERROR(
-                    f"ERROR: User '{username}' does not exist."
-                )
-            )
+        self.stdout.write(f"Username: {username}")
+        self.stdout.write(f"Password: {password}")
