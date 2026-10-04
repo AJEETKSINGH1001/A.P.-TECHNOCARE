@@ -2,9 +2,17 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from django.http import HttpResponse
 
+def render_test(request):
+    return HttpResponse(
+        "Django is running | ROOT_URLCONF=config.urls | Production settings loaded"
+    )
 
 urlpatterns = [
+
+path("render-test/", render_test),
+
     path(
         "admin/",
         admin.site.urls,
@@ -32,3 +40,4 @@ if settings.DEBUG:
         settings.MEDIA_URL,
         document_root=settings.MEDIA_ROOT,
     )
+
