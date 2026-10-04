@@ -1,38 +1,62 @@
-
+# ==============================
 # Python
+# ==============================
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
 *.so
 
+# ==============================
 # Virtual environments
+# ==============================
 .venv/
 venv/
 env/
 
+# ==============================
 # Django
+# ==============================
 *.log
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+
+# User uploaded media
 media/
+
+# Django collected static files
 staticfiles/
 
-# Environment variables and secrets
+# ==============================
+# Environment variables / secrets
+# ==============================
 .env
 .env.*
 !.env.example
 
+# ==============================
 # IDE
+# ==============================
 .idea/
 .vscode/
 
+# ==============================
 # OS
+# ==============================
 .DS_Store
 Thumbs.db
 
-# Test and coverage
+# ==============================
+# Testing / coverage
+# ==============================
 .coverage
 htmlcov/
 .pytest_cache/
+
+# ==============================
+# Build / cache
+# ==============================
+*.pyc
+*.pyo
+*.pyd
