@@ -35,7 +35,7 @@ class Command(BaseCommand):
         else:
             self.stdout.write(
                 self.style.SUCCESS(
-                    "SUCCESS: Existing admin password reset."
+                    "SUCCESS: Existing admin password respython manage.py runserberet."
                 )
             )
 
