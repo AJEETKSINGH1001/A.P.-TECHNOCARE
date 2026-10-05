@@ -1,4 +1,3 @@
-
 {% extends "admin/base_site.html" %}
 
 {% load i18n %}
@@ -6,6 +5,14 @@
 {% block title %}A.P. TECHNOCARE Dashboard{% endblock %}
 
 {% block content %}
+
+<!-- Logout Button -->
+<form method="post" action="{% url 'admin:logout' %}" style="margin-bottom: 20px;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">
+        Logout
+    </button>
+</form>
 
 <div class="container-fluid">
 
